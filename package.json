@@ -1,6 +1,6 @@
  {
   "name": "qr-send-private-server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Robust PeerServer for QR Send Pro",
   "main": "server.js",
   "scripts": {
@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "express": "^4.19.2",
-    "express-peer-server": "^1.2.2"
+    "express-peer-server": "^1.2.2",
+    "cors": "^2.8.5"
   }
 }
