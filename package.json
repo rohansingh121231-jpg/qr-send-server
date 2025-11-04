@@ -1,13 +1,13 @@
-{
+ {
   "name": "qr-send-private-server",
-  "version": "1.0.0",
-  "description": "Private PeerServer for QR Send Pro",
+  "version": "1.0.1",
+  "description": "Robust PeerServer for QR Send Pro",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.19.2",
-    "peer": "^1.0.2"
+    "express-peer-server": "^1.2.2"
   }
 }
