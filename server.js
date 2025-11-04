@@ -1,50 +1,34 @@
-// --- Node.js Server for QR Send Pro (Render.com) ---
-// Is server ka *sirf ek kaam* hai: PeerJS server chalana.
-// Yeh HTML file serve nahi karega (woh kaam Netlify kar raha hai).
-
+ // --- Naya, Behtar server.js code ---
 const express = require('express');
-const { PeerServer } = require('peer');
+const { ExpressPeerServer } = require('express-peer-server');
 const http = require('http');
 
-// --- 1. Basic App Setup ---
 const app = express();
-// Render.com hamein batayega ki kaun sa port istemal karna hai
-const PORT = process.env.PORT || 9000; 
+const PORT = process.env.PORT || 9000;
 
-// --- 2. Uptime Robot ke liye "Ping" Route ---
-// Yeh Uptime Robot ko "Main zinda hoon" ka signal dega.
-// Yeh aapke 100GB data mein se *kuch bhi* kharch nahi karega.
+// 1. Uptime Robot ke liye "Ping" Route
+// Yeh check karega ki server zinda hai.
 app.get('/', (req, res) => {
-  res.send('PeerJS Server is running. Ready for pings.');
+  res.status(200).send('PeerJS Server is running. Ready for pings.');
 });
 
-// --- 3. Create HTTP Server ---
+// 2. HTTP server banayein
 const server = http.createServer(app);
 
-// --- 4. Setup Private PeerServer ---
-const peerServer = PeerServer({
-  path: '/peerjs', // Clients is path par connect honge
-  proxied: true,   // Deployment ke liye zaroori
+// 3. PeerServer ke options
+const peerServer = ExpressPeerServer(server, {
+  path: '/peerjs', // Client is path par connect hoga
   allow_discovery: true,
+  debug: true,
+  // proxied: true // Render.com ke liye iski zaroorat nahi
 });
 
-// PeerServer ko mukhya server ke 'upgrade' (WebSocket) event se jod dein
-server.on('upgrade', (request, socket, head) => {
-  peerServer.handleUpgrade(request, socket, head);
-});
+// 4. PeerServer ko Express app ke saath jodein
+app.use(peerServer);
 
-// Server connections ko log karein (optional)
-peerServer.on('connection', (client) => {
-  console.log(`[PeerServer] Client connected: ${client.getId()}`);
-});
-
-// Server disconnections ko log karein (optional)
-peerServer.on('disconnect', (client) => {
-  console.log(`[PeerServer] Client disconnected: ${client.getId()}`);
-});
-
-// --- 5. Start the Server ---
+// 5. Server ko start karein
 server.listen(PORT, () => {
   console.log(`[Server] Online aur http://localhost:${PORT} par chal raha hai`);
-  console.log(`[PeerServer] Mukhya server se jud gaya, path: /peerjs`);
+  console.log(`[PeerServer] Path: /peerjs`);
 });
+
