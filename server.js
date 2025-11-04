@@ -1,10 +1,15 @@
- // --- Naya, Behtar server.js code ---
+ // --- Naya, Behtar server.js code (CORS Fix ke saath) ---
 const express = require('express');
 const { ExpressPeerServer } = require('express-peer-server');
 const http = require('http');
+const cors = require('cors'); // <-- NAYI LINE (CORS ko import karein)
 
 const app = express();
 const PORT = process.env.PORT || 9000;
+
+// --- NAYI LINE (CORS ko permission dene ke liye) ---
+// Yeh line Netlify (ya kisi bhi domain) se request ko allow karegi
+app.use(cors());
 
 // 1. Uptime Robot ke liye "Ping" Route
 // Yeh check karega ki server zinda hai.
@@ -19,8 +24,7 @@ const server = http.createServer(app);
 const peerServer = ExpressPeerServer(server, {
   path: '/peerjs', // Client is path par connect hoga
   allow_discovery: true,
-  debug: true,
-  // proxied: true // Render.com ke liye iski zaroorat nahi
+  debug: true
 });
 
 // 4. PeerServer ko Express app ke saath jodein
@@ -31,4 +35,3 @@ server.listen(PORT, () => {
   console.log(`[Server] Online aur http://localhost:${PORT} par chal raha hai`);
   console.log(`[PeerServer] Path: /peerjs`);
 });
-
