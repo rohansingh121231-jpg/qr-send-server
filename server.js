@@ -1,18 +1,17 @@
- // --- Naya, Behtar server.js code (CORS Fix ke saath) ---
+ // --- Naya, Behtar server.js code (NPM Fix ke saath) ---
 const express = require('express');
-const { ExpressPeerServer } = require('express-peer-server');
+// --- NAYI LINE (Ab 'peer' se import karein) ---
+const { ExpressPeerServer } = require('peer');
 const http = require('http');
-const cors = require('cors'); // <-- NAYI LINE (CORS ko import karein)
+const cors = require('cors'); 
 
 const app = express();
 const PORT = process.env.PORT || 9000;
 
-// --- NAYI LINE (CORS ko permission dene ke liye) ---
-// Yeh line Netlify (ya kisi bhi domain) se request ko allow karegi
+// --- CORS ko permission dene ke liye ---
 app.use(cors());
 
 // 1. Uptime Robot ke liye "Ping" Route
-// Yeh check karega ki server zinda hai.
 app.get('/', (req, res) => {
   res.status(200).send('PeerJS Server is running. Ready for pings.');
 });
